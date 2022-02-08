@@ -59,8 +59,8 @@ def add_new_data():
 
 
 def main():
-    # app.run(port=int(os.environ.get("PORT")), host='0.0.0.0')
-    app.run(port=8080, host='192.168.56.1')
+    app.run(port=int(os.environ.get("PORT")), host='0.0.0.0')
+    # app.run(port=8080, host='192.168.56.1')
 
 
 if __name__ == '__main__':
