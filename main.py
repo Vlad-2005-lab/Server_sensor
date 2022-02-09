@@ -33,11 +33,11 @@ def check_user():
 def create_user():
     login = request.args.get("l", default="нет", type=str)
     password = request.args.get("p", default="нет", type=str)
-    mail = request.args.get("m", default="нет", type=str)
+    mail = request.args.get("m", default="нет", type=str).replace(" ", "").lower()
     session = db_session.create_session()
     password_hash_object = hashlib.sha256(password.encode("utf-8"))
     password_hex_dig = password_hash_object.hexdigest()
-    users = list(map(lambda x: x.id, session.query(User).all()))
+    users = list(map(lambda x: x.login, session.query(User).all()))
     if mail.count("@") == 1 and mail.split("@")[1].count(".") == 1 and login not in users:
         user = User()
         user.login = login
