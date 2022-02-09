@@ -10,3 +10,4 @@ class User(SqlAlchemyBase, UserMixin):
     password = sqlalchemy.Column(sqlalchemy.String, unique=True, nullable=True)
     mail = sqlalchemy.Column(sqlalchemy.String, unique=True, nullable=True)
     sensors = sqlalchemy.Column(sqlalchemy.String, default="")
+    extra = sqlalchemy.Column(sqlalchemy.String, default="")

@@ -29,6 +29,27 @@ def check_user():
     return "not ok"
 
 
+@app.route("/create_user", methods=['GET', 'POST'])
+def create_user():
+    login = request.args.get("l", default="нет", type=str)
+    password = request.args.get("p", default="нет", type=str)
+    mail = request.args.get("m", default="нет", type=str)
+    session = db_session.create_session()
+    password_hash_object = hashlib.sha256(password.encode("utf-8"))
+    password_hex_dig = password_hash_object.hexdigest()
+    if mail.count("@") == 1 and mail.split("@")[1].count(".") == 1:
+        user = User()
+        user.login = login
+        user.password = password_hex_dig
+        user.mail = mail
+        session.add(user)
+        session.commit()
+        session.close()
+        return "done"
+    else:
+        return "invalid mail"
+
+
 @app.route("/add_new_sensor", methods=['POST'])
 def add_new_sensor():
     password = request.args.get("p", default="нет", type=str)
