@@ -37,7 +37,8 @@ def create_user():
     session = db_session.create_session()
     password_hash_object = hashlib.sha256(password.encode("utf-8"))
     password_hex_dig = password_hash_object.hexdigest()
-    if mail.count("@") == 1 and mail.split("@")[1].count(".") == 1:
+    users = list(map(lambda x: x.id, session.query(User).all()))
+    if mail.count("@") == 1 and mail.split("@")[1].count(".") == 1 and login not in users:
         user = User()
         user.login = login
         user.password = password_hex_dig
@@ -45,6 +46,8 @@ def create_user():
         session.add(user)
         session.commit()
         return str(user.id)
+    elif login in users:
+        return "busy"
     else:
         return "invalid mail"
 
