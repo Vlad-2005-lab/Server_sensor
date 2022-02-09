@@ -23,7 +23,7 @@ def check_user():
     user = session.query(User).filter(User.login == login).first()
     try:
         if password == user.password:
-            return "ok"
+            return str(user.id)
     except Exception:
         return "not ok"
     return "not ok"
@@ -44,8 +44,7 @@ def create_user():
         user.mail = mail
         session.add(user)
         session.commit()
-        session.close()
-        return "done"
+        return str(user.id)
     else:
         return "invalid mail"
 
