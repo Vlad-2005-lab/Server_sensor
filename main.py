@@ -15,6 +15,29 @@ def get(data):
     return list(map(int, data.split(";")))
 
 
+@app.route("/check_mail", methods=['GET', 'POST'])
+def check_mail():
+    id = request.args.get("i", default="нет", type=int)
+    code = request.args.get("c", default="нет", type=str)
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == id).first()
+    if user.extra == code:
+        return "yes"
+    else:
+        return "no"
+
+
+@app.route("/exist_user", methods=['GET', 'POST'])
+def exist_user():
+    login = request.args.get("l", default="нет", type=str)
+    session = db_session.create_session()
+    user = session.query(User).filter(User.login == login).first()
+    if user is None:
+        return "no"
+    # отправка на почту !!!!!!!!
+    return str(user.id)
+
+
 @app.route("/check_user", methods=['GET', 'POST'])
 def check_user():
     login = request.args.get("l", default="нет", type=str)
@@ -89,4 +112,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
