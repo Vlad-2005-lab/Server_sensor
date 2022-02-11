@@ -4,6 +4,11 @@ from data import db_session
 from data.sensor import Sensor
 from data.user import User
 import hashlib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import smtplib
+import random
+import threading
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'my genius secret key'
@@ -11,8 +16,71 @@ db_session.global_init("db/data.sqlite")
 password_hash = "6ce7f9ed39b43bbfd84d36f4b8849fb8bf00e2aaa71773aa8fae4e24ea71d4ae"
 
 
+def send_mail(id):
+    me = "vns.social.networks@gmail.com"
+
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == id).first()
+    you = user.mail
+
+    # Create message container - the correct MIME type is multipart/alternative.
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = "Восстановление пароля"
+    msg['From'] = me
+    msg['To'] = you
+
+    number = "".join([random.choice("0123456789QWERTYUIOPASDFGHJKLZXCVBNM") for _ in range(10)])
+    user.extra = number
+    session.commit()
+    session.close()
+    html = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            .text{text-indent: 10px;
+            align: "justify";}
+        </style>
+    </head>
+    """ + f"""<body style="width: 100%; margin: 0px;">
+    <div style="display: inline-block; width: 100%; background: #FF9900;">
+        <p style="margin: 2%; font-weight: bold; font-size: 30px; color: #000000;">Mysen</p>
+    </div>
+    <div style="display: inline-block; width: 96%; margin-left: 2%;">
+        <p class="text">
+            Вам пришло это письмо, потому что кто-то захотел изменить пароль от вашего аккаунта. Если это были не вы, никому
+            не говорите код и проигнорируйте это письмо. Код для восстановления пароля:
+        </p>
+        <p align="center" style="font-size: 50px; color: #ED760E">{number}</p>
+        <p class="text">Это письмо отправленно автоматически, на него не нужно отвечать.</p>
+    </div>
+    </body>
+    </html>
+    """
+
+    # part1 = MIMEText(text, 'plain')
+    part2 = MIMEText(html, 'html')
+
+    # msg.attach(part1)
+    msg.attach(part2)
+    smtpObj = smtplib.SMTP('smtp.gmail.com', 587)
+    smtpObj.starttls()
+    smtpObj.login('testapipythonn@gmail.com', 'testAPIpython2021')
+    smtpObj.sendmail(me, you, msg.as_string())
+    smtpObj.quit()
+
+
 def get(data):
     return list(map(int, data.split(";")))
+
+
+@app.route("/resend_mail", methods=['GET', 'POST'])
+def resend_mail():
+    id = request.args.get("i", default="нет", type=int)
+    sendmail = threading.Thread(target=send_mail, args=(id,))
+    sendmail.start()
+    return "ok"
 
 
 @app.route("/check_mail", methods=['GET', 'POST'])
@@ -34,7 +102,8 @@ def exist_user():
     user = session.query(User).filter(User.login == login).first()
     if user is None:
         return "no"
-    # отправка на почту !!!!!!!!
+    sendmail = threading.Thread(target=send_mail, args=(user.id,))
+    sendmail.start()
     return str(user.id)
 
 
@@ -111,4 +180,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    x = threading.Thread(target=main)
+    x.start()
