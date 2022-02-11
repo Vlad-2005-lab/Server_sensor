@@ -81,6 +81,11 @@ def get(data):
     return list(map(int, data.split(";")))
 
 
+@app.route("/change_user_password", methods=['GET', 'POST'])
+def change_user_password():
+    pass
+
+
 @app.route("/resend_mail", methods=['GET', 'POST'])
 def resend_mail():
     id = request.args.get("i", default="нет", type=int)
@@ -92,7 +97,7 @@ def resend_mail():
 @app.route("/check_mail", methods=['GET', 'POST'])
 def check_mail():
     id = request.args.get("i", default="нет", type=int)
-    code = request.args.get("c", default="нет", type=str)
+    code = request.args.get("c", default="нет", type=str).replace(" ", "").upper()
     session = db_session.create_session()
     user = session.query(User).filter(User.id == id).first()
     if user.extra == code:
@@ -133,13 +138,11 @@ def create_user():
     password = request.args.get("p", default="нет", type=str)
     mail = request.args.get("m", default="нет", type=str).replace(" ", "").lower()
     session = db_session.create_session()
-    password_hash_object = hashlib.sha256(password.encode("utf-8"))
-    password_hex_dig = password_hash_object.hexdigest()
     users = list(map(lambda x: x.login, session.query(User).all()))
     if mail.count("@") == 1 and mail.split("@")[1].count(".") == 1 and login not in users:
         user = User()
         user.login = login
-        user.password = password_hex_dig
+        user.password = password
         user.mail = mail
         session.add(user)
         session.commit()
