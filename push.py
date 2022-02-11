@@ -7,7 +7,7 @@ import threading
 
 
 def send_mail():
-    me = "vns.social.networks@gmail.com"
+    me = "mysen.help@gmail.com"
     you = "anikanovvlad@yandex.ru"
 
     # Create message container - the correct MIME type is multipart/alternative.
@@ -50,7 +50,7 @@ def send_mail():
     msg.attach(part2)
     smtpObj = smtplib.SMTP('smtp.gmail.com', 587)
     smtpObj.starttls()
-    smtpObj.login('testapipythonn@gmail.com', 'testAPIpython2021')
+    smtpObj.login('mysen.help@gmail.com', 'mysen2021')
     smtpObj.sendmail(me, you, msg.as_string())
     smtpObj.quit()
     print("mail sended")

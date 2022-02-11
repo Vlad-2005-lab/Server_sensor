@@ -12,19 +12,18 @@ import threading
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'my genius secret key'
-app.config["MAIL_SERVER"] = "mail.google.com"
-app.config["MAIL_PORT"] = "mail.google.com"
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_USE_SSL"] = False
 app.config["MAIL_PORT"] = 587
-app.config["MAIL_USERNAME"] = "testapipythonn@gmail.com"
-app.config["MAIL_PASSWORD"] = "testAPIpython2021"
+app.config["MAIL_USERNAME"] = "mysen.help@gmail.com"
+app.config["MAIL_PASSWORD"] = "mysen2021"
 db_session.global_init("db/data.sqlite")
 password_hash = "6ce7f9ed39b43bbfd84d36f4b8849fb8bf00e2aaa71773aa8fae4e24ea71d4ae"
 
 
 def send_mail(id):
-    me = "testapipythonn@gmail.com"
+    me = "mysen.help@gmail.com"
 
     session = db_session.create_session()
     user = session.query(User).filter(User.id == id).first()
@@ -73,7 +72,7 @@ def send_mail(id):
     msg.attach(part2)
     smtpObj = smtplib.SMTP('smtp.gmail.com', 587)
     smtpObj.starttls()
-    smtpObj.login('testapipythonn@gmail.com', 'testAPIpython2021')
+    smtpObj.login(me, 'mysen2021')
     smtpObj.sendmail(me, you, msg.as_string())
     smtpObj.quit()
 
