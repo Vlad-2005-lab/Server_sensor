@@ -83,7 +83,14 @@ def get(data):
 
 @app.route("/change_user_password", methods=['GET', 'POST'])
 def change_user_password():
-    pass
+    id = request.args.get("i", default="нет", type=int)
+    password = request.args.get("p", default="нет", type=str)
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == id).first()
+    user.password = password
+    session.commit()
+    session.close()
+    return "ok"
 
 
 @app.route("/resend_mail", methods=['GET', 'POST'])
