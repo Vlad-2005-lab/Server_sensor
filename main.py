@@ -85,8 +85,11 @@ def get(data):
 def add_sensor_to_user():
     id = request.args.get("i", default="нет", type=int)
     id_sensor = request.args.get("is", default="нет", type=str)
+    name = request.args.get("n", default="нет", type=str)
     session = db_session.create_session()
     user = session.query(User).filter(User.id == id).first()
+    sensor = session.query(Sensor).filter(Sensor.id == id_sensor).first()
+    sensor.name = name
     if user is None:
         return "unauthorized"
     user.sensors = ";".join(user.sensors.split(";") + [id_sensor])
