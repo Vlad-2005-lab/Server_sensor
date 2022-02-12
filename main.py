@@ -85,7 +85,7 @@ def get(data):
 def get_data_sensor():
     id = request.args.get("i", default="нет", type=int)
     session = db_session.create_session()
-    sensor = session.query(Sensor).filter(Sensor.id == id).filter()
+    sensor = session.query(Sensor).filter(Sensor.id == id).first()
     return sensor.data
 
 
@@ -93,7 +93,7 @@ def get_data_sensor():
 def get_sensors():
     id = request.args.get("i", default="нет", type=int)
     session = db_session.create_session()
-    user = session.query(User).filter(User.id == id).filter()
+    user = session.query(User).filter(User.id == id).first()
     return user.sensors
 
 
