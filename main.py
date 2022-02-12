@@ -81,6 +81,18 @@ def get(data):
     return list(map(int, data.split(";")))
 
 
+@app.route("/set_data_sensor", methods=['GET', 'POST'])
+def set_data_sensor():
+    id = request.args.get("i", default="нет", type=int)
+    data = request.args.get("d", default="нет", type=str)
+    session = db_session.create_session()
+    sensor = session.query(Sensor).filter(Sensor.id == id).first()
+    sensor.data = data
+    session.commit()
+    session.close()
+    return "done"
+
+
 @app.route("/get_sensor_name", methods=['GET', 'POST'])
 def get_sensor_name():
     id = request.args.get("i", default="нет", type=int)
