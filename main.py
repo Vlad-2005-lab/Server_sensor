@@ -94,7 +94,6 @@ def add_sensor_to_user():
     if id_sensor not in user.sensors:
         sensor.name = name
         user.sensors = ";".join(user.sensors.split(";") + [id_sensor]) if len(user.sensors) > 0 else id_sensor
-    print(user.sensors)
     session.commit()
     session.close()
     return "ok"
