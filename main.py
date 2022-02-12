@@ -93,7 +93,7 @@ def add_sensor_to_user():
         return "unauthorized"
     if id_sensor not in user.sensors:
         sensor.name = name
-        user.sensors = ";".join(user.sensors.split(";") + [id_sensor])
+        user.sensors = ";".join(user.sensors.split(";") + [id_sensor]) if len(user.sensors) > 0 else id_sensor
     print(user.sensors)
     session.commit()
     session.close()
@@ -200,6 +200,7 @@ def create_user():
         user.login = login
         user.password = password
         user.mail = mail
+        user.sensors = ""
         session.add(user)
         session.commit()
         return str(user.id)
