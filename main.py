@@ -88,11 +88,13 @@ def add_sensor_to_user():
     name = request.args.get("n", default="нет", type=str)
     session = db_session.create_session()
     user = session.query(User).filter(User.id == id).first()
-    sensor = session.query(Sensor).filter(Sensor.id == id_sensor).first()
-    sensor.name = name
+    sensor = session.query(Sensor).filter(Sensor.id == int(id_sensor)).first()
     if user is None:
         return "unauthorized"
-    user.sensors = ";".join(user.sensors.split(";") + [id_sensor])
+    if id_sensor not in user.sensors:
+        sensor.name = name
+        user.sensors = ";".join(user.sensors.split(";") + [id_sensor])
+    print(user.sensors)
     session.commit()
     session.close()
     return "ok"
@@ -216,7 +218,6 @@ def add_new_sensor():
         session = db_session.create_session()
         sensor = Sensor()
         sensor.id = len(session.query(Sensor).all()) + 1
-        print(sensor.id)
         session.add(sensor)
         session.commit()
         session.close()
