@@ -81,6 +81,30 @@ def get(data):
     return list(map(int, data.split(";")))
 
 
+@app.route("/add_sensor_to_user", methods=['GET', 'POST'])
+def add_sensor_to_user():
+    id = request.args.get("i", default="нет", type=int)
+    id_sensor = request.args.get("is", default="нет", type=str)
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == id).first()
+    if user is None:
+        return "unauthorized"
+    user.sensors = ";".join(user.sensors.split(";") + [id_sensor])
+    session.commit()
+    session.close()
+    return "ok"
+
+
+@app.route("/exist_sensor", methods=['GET', 'POST'])
+def exist_sensor():
+    id = request.args.get("i", default="нет", type=int)
+    session = db_session.create_session()
+    sensor = session.query(Sensor).filter(Sensor.id == id).first()
+    if sensor is None:
+        return "not exist"
+    return "yes"
+
+
 @app.route("/get_data_sensor", methods=['GET', 'POST'])
 def get_data_sensor():
     id = request.args.get("i", default="нет", type=int)
@@ -94,6 +118,8 @@ def get_sensors():
     id = request.args.get("i", default="нет", type=int)
     session = db_session.create_session()
     user = session.query(User).filter(User.id == id).first()
+    if user is None:
+        return "unauthorized"
     return user.sensors
 
 
@@ -103,6 +129,8 @@ def change_user_password():
     password = request.args.get("p", default="нет", type=str)
     session = db_session.create_session()
     user = session.query(User).filter(User.id == id).first()
+    if user is None:
+        return "unauthorized"
     user.password = password
     session.commit()
     session.close()
@@ -123,10 +151,11 @@ def check_mail():
     code = request.args.get("c", default="нет", type=str).replace(" ", "").upper()
     session = db_session.create_session()
     user = session.query(User).filter(User.id == id).first()
+    if user is None:
+        return "unauthorized"
     if user.extra == code:
         return "yes"
-    else:
-        return "no"
+    return "no"
 
 
 @app.route("/exist_user", methods=['GET', 'POST'])
@@ -147,11 +176,10 @@ def check_user():
     password = request.args.get("p", default="нет", type=str)
     session = db_session.create_session()
     user = session.query(User).filter(User.login == login).first()
-    try:
-        if password == user.password:
-            return str(user.id)
-    except Exception:
+    if user is None:
         return "not ok"
+    if password == user.password:
+        return str(user.id)
     return "not ok"
 
 
@@ -187,14 +215,6 @@ def add_new_sensor():
         session.add(sensor)
         session.commit()
         session.close()
-    return "ok"
-
-
-@app.route("/append_sensor_to_user", methods=['POST'])
-def append_sensor_to_user():
-    id_user = request.args.get("i", default="нет", type=int)
-    id_sensor = request.args.get("s", default="нет", type=int)
-    session = db_session.create_session()
     return "ok"
 
 
