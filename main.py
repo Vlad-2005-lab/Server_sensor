@@ -19,7 +19,7 @@ app.config["MAIL_PORT"] = 587
 app.config["MAIL_USERNAME"] = "mysen.help@gmail.com"
 app.config["MAIL_PASSWORD"] = "mysen2021"
 db_session.global_init("db/data.sqlite")
-password_hash = "6ce7f9ed39b43bbfd84d36f4b8849fb8bf00e2aaa71773aa8fae4e24ea71d4ae"
+password_hash = "10bb4706571d2e4abceedf297b1b5eb0a84ee3e0697fbf87ce237fb259d7f490"
 
 
 def send_mail(id):
@@ -79,6 +79,22 @@ def send_mail(id):
 
 def get(data):
     return list(map(int, data.split(";")))
+
+
+@app.route("/get_data_sensor", methods=['GET', 'POST'])
+def get_data_sensor():
+    id = request.args.get("i", default="нет", type=int)
+    session = db_session.create_session()
+    sensor = session.query(Sensor).filter(Sensor.id == id).filter()
+    return sensor.data
+
+
+@app.route("/get_sensors", methods=['GET', 'POST'])
+def get_sensors():
+    id = request.args.get("i", default="нет", type=int)
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == id).filter()
+    return user.sensors
 
 
 @app.route("/change_user_password", methods=['GET', 'POST'])
@@ -174,19 +190,11 @@ def add_new_sensor():
     return "ok"
 
 
-@app.route("/add_new_data", methods=['POST'])
-def add_new_data():
-    id = request.args.get('id', default=-1, type=int)
-    new_data = request.args.get("data", default=-1, type=int)
-    if new_data == -1:
-        return "ok"
+@app.route("/append_sensor_to_user", methods=['POST'])
+def add_new_sensor():
+    id_user = request.args.get("i", default="нет", type=int)
+    id_sensor = request.args.get("s", default="нет", type=int)
     session = db_session.create_session()
-    sensor = session.query(Sensor).filter(Sensor.id == id).first()
-    sensor_data = get(sensor.data) if sensor.data != "" else []
-    if len(sensor_data) > 0 and sensor_data[-1] != new_data or len(sensor_data) == 0:
-        sensor.data = ";".join(list(map(str, sensor_data + [new_data])))
-        session.commit()
-    session.close()
     return "ok"
 
 
