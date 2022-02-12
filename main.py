@@ -19,7 +19,7 @@ app.config["MAIL_PORT"] = 587
 app.config["MAIL_USERNAME"] = "mysen.help@gmail.com"
 app.config["MAIL_PASSWORD"] = "mysen2021"
 db_session.global_init("db/data.sqlite")
-password_hash = "e522c66a1399bbc6c2a39f9a873ba4f9637757285fe1ecade13bafdc11bab920"
+password_hash = "27b80f2b0304bef4da58f2bde7e93e5b948f96f1c4a3f60abab033e39b41428b"
 
 
 def send_mail(id):
