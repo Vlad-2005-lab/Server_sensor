@@ -215,6 +215,7 @@ def add_new_sensor():
     if password_hex_dig == password_hash:
         session = db_session.create_session()
         sensor = Sensor()
+        sensor.id = len(session.query(Sensor).all()) + 1
         print(sensor.id)
         session.add(sensor)
         session.commit()
