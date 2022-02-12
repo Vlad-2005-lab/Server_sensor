@@ -191,7 +191,7 @@ def add_new_sensor():
 
 
 @app.route("/append_sensor_to_user", methods=['POST'])
-def add_new_sensor():
+def append_sensor_to_user():
     id_user = request.args.get("i", default="нет", type=int)
     id_sensor = request.args.get("s", default="нет", type=int)
     session = db_session.create_session()
