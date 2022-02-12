@@ -81,6 +81,14 @@ def get(data):
     return list(map(int, data.split(";")))
 
 
+@app.route("/get_sensor_name", methods=['GET', 'POST'])
+def get_sensor_name():
+    id = request.args.get("i", default="нет", type=int)
+    session = db_session.create_session()
+    sensor = session.query(Sensor).filter(Sensor.id == id).first()
+    return sensor.name
+
+
 @app.route("/add_sensor_to_user", methods=['GET', 'POST'])
 def add_sensor_to_user():
     id = request.args.get("i", default="нет", type=int)
