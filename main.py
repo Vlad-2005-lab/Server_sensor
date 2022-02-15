@@ -88,6 +88,19 @@ def are_you_alive():
     return str(datetime.datetime.now() - time_start)
 
 
+@app.route("/delete_sensor", methods=['GET', 'POST'])
+def change_name_sensor():
+    id = request.args.get("i", default="нет", type=int)
+    session = db_session.create_session()
+    sensor = session.query(Sensor).filter(Sensor.id == id).first()
+    if sensor is None:
+        return "doesnt_exist"
+    session.delete(sensor)
+    session.commit()
+    session.close()
+    return "ok"
+
+
 @app.route("/change_name_sensor", methods=['GET', 'POST'])
 def change_name_sensor():
     id = request.args.get("i", default="нет", type=int)
