@@ -81,6 +81,15 @@ def get(data):
     return list(map(int, data.split(";")))
 
 
+
+@app.route("/are_you_alive", methods=['GET', 'POST'])
+def are_you_alive():
+    sesion = db_session.create_session()
+    if len(sesion.query(User).all()) > 0:
+        return "yes"
+    return "no"
+
+
 @app.route("/set_data_sensor", methods=['GET', 'POST'])
 def set_data_sensor():
     id = request.args.get("i", default="нет", type=int)
