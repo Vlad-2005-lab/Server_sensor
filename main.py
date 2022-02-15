@@ -9,6 +9,7 @@ from email.mime.text import MIMEText
 import smtplib
 import random
 import threading
+import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'my genius secret key'
@@ -20,6 +21,7 @@ app.config["MAIL_USERNAME"] = "mysen.help@gmail.com"
 app.config["MAIL_PASSWORD"] = "mysen2021"
 db_session.global_init("db/data.sqlite")
 password_hash = "27b80f2b0304bef4da58f2bde7e93e5b948f96f1c4a3f60abab033e39b41428b"
+time_start = datetime.datetime.now()
 
 
 def send_mail(id):
@@ -81,13 +83,9 @@ def get(data):
     return list(map(int, data.split(";")))
 
 
-
 @app.route("/are_you_alive", methods=['GET', 'POST'])
 def are_you_alive():
-    sesion = db_session.create_session()
-    if len(sesion.query(User).all()) > 0:
-        return "yes"
-    return "no"
+    return datetime.datetime.now() - time_start
 
 
 @app.route("/set_data_sensor", methods=['GET', 'POST'])
