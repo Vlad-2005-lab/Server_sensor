@@ -11,6 +11,7 @@ import random
 import threading
 import datetime
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'my genius secret key'
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
