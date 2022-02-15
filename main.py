@@ -89,7 +89,7 @@ def are_you_alive():
 
 
 @app.route("/delete_sensor", methods=['GET', 'POST'])
-def change_name_sensor():
+def delete_sensor():
     id = request.args.get("i", default="нет", type=int)
     sensor = request.args.get("s", default="нет", type=str)
     session = db_session.create_session()
