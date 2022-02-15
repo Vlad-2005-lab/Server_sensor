@@ -85,7 +85,7 @@ def get(data):
 
 @app.route("/are_you_alive", methods=['GET', 'POST'])
 def are_you_alive():
-    return datetime.datetime.now() - time_start
+    return str(datetime.datetime.now() - time_start)
 
 
 @app.route("/set_data_sensor", methods=['GET', 'POST'])
