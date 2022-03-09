@@ -11,7 +11,6 @@ import random
 import threading
 import datetime
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'my genius secret key'
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
@@ -82,6 +81,44 @@ def send_mail(id):
 
 def get(data):
     return list(map(int, data.split(";")))
+
+
+@app.route("/change_mail", methods=['GET', 'POST'])
+def change_mail():
+    id = request.args.get("i", default="нет", type=int)
+    password = request.args.get("p", default="нет", type=str)
+    mail = request.args.get("m", default="нет", type=str)
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == id).first()
+    if user.password == password:
+        user.mail = mail
+        return "ok"
+    return "bad password"
+
+
+@app.route("/change_password", methods=['GET', 'POST'])
+def change_password():
+    id = request.args.get("i", default="нет", type=int)
+    old_password = request.args.get("o", default="нет", type=str)
+    new_password = request.args.get("n", default="нет", type=str)
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == id).first()
+    if user.password == old_password:
+        user.password = new_password
+        session.commit()
+        return "ok"
+    else:
+        return "bad password"
+
+
+@app.route("/delete_me", methods=['GET', 'POST'])
+def delete_me():
+    id = request.args.get("i", default="нет", type=int)
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == id).first()
+    session.delete(user)
+    session.commit()
+    return "ok"
 
 
 @app.route("/are_you_alive", methods=['GET', 'POST'])
