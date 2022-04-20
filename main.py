@@ -17,7 +17,8 @@ app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_USE_SSL"] = False
 app.config["MAIL_PORT"] = 587
-app.config["MAIL_USERNAME"] = "mysen.help@gmail.com"
+# app.config["MAIL_USERNAME"] = "mysen.help.me@gmail.com"
+app.config["MAIL_USERNAME"] = "mysen.help@yandex.ru"
 app.config["MAIL_PASSWORD"] = "mysen2021"
 db_session.global_init("db/data.sqlite")
 password_hash = "27b80f2b0304bef4da58f2bde7e93e5b948f96f1c4a3f60abab033e39b41428b"
@@ -25,7 +26,7 @@ time_start = datetime.datetime.now()
 
 
 def send_mail(id):
-    me = "mysen.help@gmail.com"
+    me = "mysen.help@yandex.ru"
 
     session = db_session.create_session()
     user = session.query(User).filter(User.id == id).first()
@@ -72,7 +73,7 @@ def send_mail(id):
 
     # msg.attach(part1)
     msg.attach(part2)
-    smtpObj = smtplib.SMTP('smtp.gmail.com', 587)
+    smtpObj = smtplib.SMTP('smtp.yandex.ru', 587)
     smtpObj.starttls()
     smtpObj.login(me, 'mysen2021')
     smtpObj.sendmail(me, you, msg.as_string())
@@ -317,8 +318,9 @@ def add_new_sensor():
 
 
 def main():
-    app.run(port=int(os.environ.get("PORT")), host='0.0.0.0')
+    # app.run(port=int(os.environ.get("PORT")), host='0.0.0.0')
     # app.run(port=8080, host='192.168.56.1')
+    app.run(port=8080)
 
 
 if __name__ == '__main__':
