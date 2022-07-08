@@ -592,7 +592,7 @@ def server():
 def telegram_bot():
     while True:
         try:
-            bot.infinity_polling(True)
+            bot.infinity_polling()
             print("Started Telegram Bot")
             time.sleep(5)
         except Exception as ex:
