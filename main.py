@@ -581,7 +581,7 @@ def server():
     # app.run(port=int(os.environ.get("PORT")), host='0.0.0.0')
     while True:
         try:
-            app.run(port=8080)
+            app.run(port=54321)
             time.sleep(5)
             print("Started Server")
         except Exception as ex:
