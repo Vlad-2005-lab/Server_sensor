@@ -23,8 +23,9 @@ app.config["MAIL_USERNAME"] = "mysen.help@yandex.ru"
 app.config["MAIL_PASSWORD"] = "AnikanovVlad2005"
 db_session.global_init("db/data.sqlite")
 password_hash = "27b80f2b0304bef4da58f2bde7e93e5b948f96f1c4a3f60abab033e39b41428b"
-bot = telebot.TeleBot(open('extras/token/telegram_token.txt').read())
+bot = telebot.TeleBot(open('extras/token/mysen.txt').read())
 time_start = datetime.datetime.now()
+LAST_TIME_CHECK = datetime.datetime.now()
 
 
 # def send_mail(id):
@@ -383,6 +384,8 @@ def get_text_messages(message):
     """
     session = db_session.create_session()
     check = session.query(User).filter(User.tg_id == message.from_user.id).first()
+    if message.text == "nigger?":
+        print("yes, nigger")
     if check is None:
         user = User()
         user.tg_id = int(message.from_user.id)
@@ -401,6 +404,8 @@ def get_text_messages(message):
 
 
 def main_menu(message):
+    if message.text == "nigger?":
+        print("yes, nigger")
     session = db_session.create_session()
     user = session.query(User).filter(User.tg_id == message.from_user.id).first()
     if user.extra == "id" and message.text != "Отмена":
@@ -438,8 +443,9 @@ def main_menu(message):
         text = "Ваши устройства:"
     else:
         text = "У вас нет устройств. Вы можете добавить нажав по кнопке:"
-    bot.send_message(message.from_user.id, text,
-                     reply_markup=buttons_creator(keyboard))
+    res = bot.send_message(message.from_user.id, text,
+                           reply_markup=buttons_creator(keyboard))
+    print(res)
     session.close()
     return bot.register_next_step_handler(message, main_menu)
 
@@ -604,8 +610,8 @@ def checker():
     while True:
         try:
             # some work
-            break
             # print("Started Checker")
+            break
         except Exception as ex:
             print(f"ERROR: {ex}\nRestarting Cheker....")
             time.sleep(10)
