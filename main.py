@@ -610,7 +610,8 @@ def checker():
         try:
             # some work
             # print("Started Checker")
-            break
+            bot.send_message(5386667905, "не спать")
+            time.sleep(60)
         except Exception as ex:
             print(f"ERROR: {ex}\nRestarting Cheker....")
             time.sleep(10)
