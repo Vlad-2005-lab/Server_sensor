@@ -445,7 +445,6 @@ def main_menu(message):
         text = "У вас нет устройств. Вы можете добавить нажав по кнопке:"
     res = bot.send_message(message.from_user.id, text,
                            reply_markup=buttons_creator(keyboard))
-    print(res)
     session.close()
     return bot.register_next_step_handler(message, main_menu)
 
