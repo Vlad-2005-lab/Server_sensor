@@ -5,14 +5,14 @@ import time
 import datetime
 import hashlib
 
-domen = "0a6c-178-72-70-221.ngrok.io"
+domen = "670a-178-72-68-231.ngrok.io"
 
-# password = "boevojvertoletapach"
-# # for i in range(1, 16):
-# # #     requests.request("POST", f"https://{domen}/add_new_sensor?p={password}")
+password = "boevojvertoletapach"
+for i in range(1, 16):
+    requests.request("POST", f"https://{domen}/add_new_sensor?p={password}")
 # # #     # ans = requests.request("POST", f"https://watersensors.herokuapp.com/are_you_alive")
 # # # #     # print(ans.text)
-# #     time.sleep(1)
+    time.sleep(1)
 # #     try:
 # #         requests.request("POST", f"https://{domen}/set_data_sensor?i={i}&d={random.choice(['green', 'yellow', 'red'])}")
 # #         print(i, "done")
@@ -25,11 +25,11 @@ domen = "0a6c-178-72-70-221.ngrok.io"
 # # a = "1;2;3"
 # # a = ";".join(a.replace(";", " ").replace("2", "").split())
 # # print(a)
-while True:
-    try:
-        ans = requests.request("POST", f"https://{domen}/are_you_alive")
-        print(datetime.datetime.now(), ans.text)
-    except Exception:
-        print("lost connection")
-
-    time.sleep(10)
+# while True:
+#     try:
+#         ans = requests.request("POST", f"https://{domen}/are_you_alive")
+#         print(datetime.datetime.now(), ans.text)
+#     except Exception:
+#         print("lost connection")
+#
+#     time.sleep(10)

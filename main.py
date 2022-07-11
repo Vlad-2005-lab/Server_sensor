@@ -89,7 +89,7 @@ def get(data):
 
 
 def get_red_sensor(user, session):
-    data = get(user.data)
+    data = get(user.sensors)
     for id_sensor in data:
         sensor = session.query(Sensor).filter(Sensor.id == id_sensor).first()
         if sensor.data == "red":
