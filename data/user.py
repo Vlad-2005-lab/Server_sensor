@@ -9,3 +9,4 @@ class User(SqlAlchemyBase, UserMixin):
     tg_id = sqlalchemy.Column(sqlalchemy.Integer, default="")
     sensors = sqlalchemy.Column(sqlalchemy.String, default="")
     extra = sqlalchemy.Column(sqlalchemy.String, default="")
+    last_time = sqlalchemy.Column(sqlalchemy.String, default="")

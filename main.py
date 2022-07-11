@@ -88,6 +88,15 @@ def get(data):
     return list(map(int, data.split(";")))
 
 
+def get_red_sensor(user, session):
+    data = get(user.data)
+    for id_sensor in data:
+        sensor = session.query(Sensor).filter(Sensor.id == id_sensor).first()
+        if sensor.data == "red":
+            return sensor
+    return None
+
+
 def keyboard_creator(list_of_names, one_time=True):
     """
     :param list_of_names: list; это список с именами кнопок(['1', '2'] будет каждая кнопка в ряд)
@@ -605,12 +614,29 @@ def telegram_bot():
             time.sleep(10)
 
 
+def dont_sleep():
+    while True:
+        try:
+            bot.send_message(5386667905, "не спать")
+            time.sleep(60)
+        except Exception as ex:
+            print(f"ERROR: {ex}\nRestarting Don't sleep....")
+            time.sleep(10)
+
+
 def checker():
     while True:
         try:
-            # some work
-            # print("Started Checker")
-            bot.send_message(5386667905, "не спать")
+            session = db_session.create_session()
+            users = session.query(User).all()
+            time_now = datetime.datetime.now()
+            for user in users:
+                sensor = get_red_sensor(user, session)
+                dt = datetime.datetime.fromisoformat(str(user.last_time))
+                if sensor is not None and (time_now - dt).total_seconds() >= 24 * 60 * 60:
+                    bot.send_message(user.tg_id, f"""У вашего датчика "{sensor.name}" Критический уровень""")
+                    user.last_time = str(time_now)
+            session.close()
             time.sleep(60)
         except Exception as ex:
             print(f"ERROR: {ex}\nRestarting Cheker....")
@@ -622,5 +648,7 @@ if __name__ == '__main__':
     server.start()
     telegram_bot = threading.Thread(target=telegram_bot)
     telegram_bot.start()
+    dont_sleep = threading.Thread(target=dont_sleep)
+    dont_sleep.start()
     checker = threading.Thread(target=checker)
     checker.start()
