@@ -632,7 +632,10 @@ def checker():
             time_now = datetime.datetime.now()
             for user in users:
                 sensor = get_red_sensor(user, session)
-                dt = datetime.datetime.fromisoformat(str(user.last_time))
+                try:
+                    dt = datetime.datetime.fromisoformat(str(user.last_time))
+                except Exception:
+                    dt = datetime.datetime(2000, 1, 1)
                 if sensor is not None and (time_now - dt).total_seconds() >= 24 * 60 * 60:
                     bot.send_message(user.tg_id, f"""У вашего датчика "{sensor.name}" Критический уровень""")
                     user.last_time = str(time_now)
