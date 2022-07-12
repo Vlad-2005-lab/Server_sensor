@@ -89,11 +89,19 @@ def get(data):
 
 
 def get_red_sensor(user, session):
-    data = get(user.sensors)
+    if len(user.sensors) == 0:
+        return None
+    if ";" in user.sensors:
+        data = get(user.sensors)
+    else:
+        data = [int(user.sensors)]
+    ans = []
     for id_sensor in data:
-        sensor = session.query(Sensor).filter(Sensor.id == id_sensor).first()
+        sensor = session.query(Sensor).filter(Sensor.id == int(id_sensor)).first()
         if sensor.data == "red":
-            return sensor
+            ans.append(sensor.name)
+    if len(ans) > 0:
+        return ans
     return None
 
 
@@ -631,14 +639,19 @@ def checker():
             users = session.query(User).all()
             time_now = datetime.datetime.now()
             for user in users:
-                sensor = get_red_sensor(user, session)
+                sensors = get_red_sensor(user, session)
                 try:
                     dt = datetime.datetime.fromisoformat(str(user.last_time))
                 except Exception:
                     dt = datetime.datetime(2000, 1, 1)
-                if sensor is not None and (time_now - dt).total_seconds() >= 24 * 60 * 60:
-                    bot.send_message(user.tg_id, f"""У вашего датчика "{sensor.name}" Критический уровень""")
+                if sensors is not None and (time_now - dt).total_seconds() >= 24 * 60 * 60:
+                    text = f"""У ваших датчиков:\n"""
+                    for name in sensors:
+                        text += f"  {name}\n"
+                    text += "Критический уровень"
+                    bot.send_message(user.tg_id, text)
                     user.last_time = str(time_now)
+            session.commit()
             session.close()
             time.sleep(60)
         except Exception as ex:
